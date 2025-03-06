@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: account-container
-        image: hhana982/account:1.5
+        image: hhana982/account:1.1
         ports:
         - containerPort: 5000
         env: 
