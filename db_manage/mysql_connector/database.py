@@ -1,0 +1,47 @@
+import json
+
+from db_manage.mysql_connector.db_connector import DBConnector
+
+
+schemas_path = "db_manage\\schemas"
+
+class Database:
+    def __init__(self, name):
+        self.name = name.title()
+        self.schemas = f"{schemas_path}\\{name}.json"
+        self.init()
+
+    def init(self):
+        with DBConnector() as db:
+            db.create_db_if_doest_exist(self.name)
+        with DBConnector(self.name) as db:
+            db.create_tables_if_doest_exist(self.schemas)
+
+    def add_object(self, object_type, data):
+        with DBConnector(self.name) as db:
+            id = db.write_row(object_type.title(), data)
+            return id
+
+    def get_list_of_objects(self, object_type, conditions={}, inJson=False):
+        objs = []
+        command_str = self.create_class(object_type.title())
+        with DBConnector(self.name) as db:
+            rows = db.get_rows(object_type.title(), conditions)
+        if inJson:
+            return rows
+        for row in rows:
+            exec(f"{command_str}\nobjs.append({object_type.title()}(row))")
+        return objs
+
+    def get_single_object():
+        pass
+
+    def create_class(self, class_name):
+        command_str = f"class {class_name}:\n\t"
+        command_str += f"def __init__(self, data):\n\t\t"
+        with open(f"{self.schemas}", 'r') as f:
+            object_schema = json.loads(f.read())[class_name.title()]
+        for attr in object_schema.keys():
+            command_str += f"self.{attr} = data[\"{attr}\"] if \"{attr}\" in data else None\n\t\t"
+        return command_str
+        

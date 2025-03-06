@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: account-mysql-deployment
+  labels:
+    app: mysql
+    service: account
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+      service: account
+  template:
+    metadata:
+      labels:
+        app: mysql
+        service: account
+    spec:
+      containers:
+      - name: account-mysql
+        image: mysql
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: 'rootpassword'

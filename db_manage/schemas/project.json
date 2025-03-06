@@ -1,0 +1,6 @@
+{
+    "Project": {
+        "name": "VARCHAR(100)",
+        "account_id": "INT"
+    }
+}

@@ -1,0 +1,13 @@
+
+{
+    "Account":{
+        "name": "VARCHAR(100)",
+        "subscription_type": "VARCHAR(100)"
+    },
+    "User": {
+        "name": "VARCHAR(100)",
+        "email": "VARCHAR(100)",
+        "encrypted_password": "VARCHAR(100)",
+        "account_id": "INT"
+    }
+}
