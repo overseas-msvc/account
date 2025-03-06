@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: account
+  labels:
+    service: account
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: account
+  template:
+    metadata:
+      labels:
+        service: account
+    spec:
+      containers:
+      - name: account-container
+        image: hhana982/account:1.5
+        ports:
+        - containerPort: 5000
+        env: 
+        - name: num
+          value: "5"
