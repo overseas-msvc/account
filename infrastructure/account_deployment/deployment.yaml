@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  app: account
   name: account
   labels:
+    app: account
     service: account
 spec:
   replicas: 1
