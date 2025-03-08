@@ -3,9 +3,11 @@ kind: Service
 metadata:
   name: account-mysql
   labels:
+    app: mysql
     service: account
 spec:
   selector:
+    app: mysql
     service: account
   ports:
     - protocol: TCP
