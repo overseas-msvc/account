@@ -8,10 +8,12 @@ spec:
   replicas: 1
   selector:
     matchLabels:
+      app: account
       service: account
   template:
     metadata:
       labels:
+        app: account
         service: account
     spec:
       containers:

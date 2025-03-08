@@ -3,9 +3,11 @@ kind: Service
 metadata:
   name: account
   labels:
+    app: account
     service: account
 spec:
   selector:
+    app: account
     service: account
   ports:
     - protocol: TCP
