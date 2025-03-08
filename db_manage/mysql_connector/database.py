@@ -1,14 +1,14 @@
-import json
+import os
 
 from db_manage.mysql_connector.db_connector import DBConnector
+from db_manage.values import schemas_path
 
 
-schemas_path = "db_manage\\schemas"
 
 class Database:
     def __init__(self, name):
         self.name = name.title()
-        self.schemas = f"{schemas_path}\\{name}.json"
+        self.schemas = os.path.join(f"{schemas_path}", f"{name}.json")
         self.init()
 
     def init(self):
