@@ -18,14 +18,15 @@ def get_account():
 def create_account():
 	data = request.json
 	db = Database("account")
-	id = db.add_object("user", data)
+	id = db.add_object("account", data)
 	return json.dumps({"id": id})
+
 
 @app.route("/user", methods=["GET"])
 def get_user():
 	data = request.json
-	db = Database("user")
-	objects = db.get_list_of_objects("account", inJson=True)
+	db = Database("account")
+	objects = db.get_list_of_objects("user", inJson=True)
 	return json.dumps(objects)
 	
 
