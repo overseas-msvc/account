@@ -57,6 +57,7 @@ class Database:
         command_str += f"def __init__(self, data):\n\t\t"
         with open(f"{self.schemas}", 'r') as f:
             object_schema = json.loads(f.read())[class_name.title()]
+        command_str += f"self.id = data[\"id\"]\n\t\t"
         for attr in object_schema.keys():
             command_str += f"self.{attr} = data[\"{attr}\"] if \"{attr}\" in data else None\n\t\t"
         return command_str
