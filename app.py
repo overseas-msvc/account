@@ -1,13 +1,24 @@
 import json
 import base64
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 
 from db_manage.mysql_connector.database import Database
+from flask_session import Session
+
+import secrets
 
 
 app = Flask(__name__)
-CORS(app)
+
+# Enable CORS
+CORS(app, supports_credentials=True)
+
+# Configure Flask session
+CORS(app, supports_credentials=True)
+
+# Secure and persistent session configuration
+app.secret_key = secrets.token_hex(32)
 
 @app.route("/accounts", methods=["GET"])
 def get_accounts():
@@ -95,6 +106,14 @@ def delete_user():
 	db.delete_object("user", data["id"])
 	return "", 204
 
+@app.route("/me", methods=["GET"])
+def me():
+    user_id = session.get("user_id")
+    if not user_id:
+        return jsonify({"loggedIn": False}), 401
+    return jsonify({"loggedIn": True, "userId": user_id})
+	
+
 @app.route("/login", methods=["POST"])
 def login():
 	data = request.json
@@ -110,9 +129,15 @@ def login():
 			return f"no such user {data["username"]}", 405
 	if base64.b64decode(data["password"]) != base64.b64decode(user.encrypted_password):
 		return jsonify({"message": "wrong password"}), 401
+	session["user_id"] = user.id
 
 	return json.dumps({"userId": user.id, "accountId": user.account_id}), 200
 
+
+@app.route("/logout", methods=["POST"])
+def logout():
+	session.set("user_id", None)
+	return "", 200
 
 @app.route("/signup", methods=["POST"])
 def signup():
@@ -135,11 +160,12 @@ def signup():
 							 	"account_id": account_id})
 	if user:
 		return jsonify({"message": f"user '{user[0].name}' already exists in account {data["accountName"]}"}), 401
+	# verify email
 	user_id = db.add_object("user", data={"name": data["username"],
 							 	"account_id": account_id,
 								"email": data["email"],
 								"encrypted_password": data["password"]})
-	# verify email
+	session["user_id"] = user.id
 	return {"userId": user_id, "accountId": account_id}
 
 
