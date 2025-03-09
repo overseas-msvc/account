@@ -25,17 +25,32 @@ class Database:
 
     def get_list_of_objects(self, object_type, conditions={}, inJson=False):
         objs = []
-        command_str = self.create_class(object_type.title())
         with DBConnector(self.name) as db:
             rows = db.get_rows(object_type.title(), conditions)
         if inJson:
             return rows
+        command_str = self.create_class(object_type.title())
         for row in rows:
             exec(f"{command_str}\nobjs.append({object_type.title()}(row))")
         return objs
 
-    def get_single_object():
-        pass
+    def get_object_by_id(self, object_type, id, inJson=False):
+        with DBConnector(self.name) as db:
+            row = db.get_row(object_type.title(), {"id": id})
+        if inJson:
+            return row
+        command_str = self.create_class(object_type.title())
+        exec(f"{command_str}\nrow = {object_type.title()}(row)")
+        return row
+    
+    def update_object(self, object_type, id, data):
+        with DBConnector(self.name) as db:
+            row = db.update_row(object_type.title(), id, data)
+
+    def delete_object(self, object_type, id):
+        with DBConnector(self.name) as db:
+            row = db.delete_row(object_type.title(), id)
+
 
     def create_class(self, class_name):
         command_str = f"class {class_name}:\n\t"
