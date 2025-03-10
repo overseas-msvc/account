@@ -4,7 +4,7 @@ from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 
 from db_manage.mysql_connector.database import Database
-from flask_session import Session
+# from flask_session import Session
 
 import secrets
 
@@ -159,7 +159,7 @@ def signup():
 	user = db.get_list_of_objects("user", {"name": data["username"],
 							 	"account_id": account_id})
 	if user:
-		return jsonify({"message": f"user '{user[0].name}' already exists in account {data["accountName"]}"}), 401
+		return jsonify({"message": f"user '{user[0].name}' already exists in account {data['accountName']}"}), 401
 	# verify email
 	user_id = db.add_object("user", data={"name": data["username"],
 							 	"account_id": account_id,
