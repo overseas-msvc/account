@@ -165,7 +165,7 @@ def signup():
 							 	"account_id": account_id,
 								"email": data["email"],
 								"encrypted_password": data["password"]})
-	session["user_id"] = user.id
+	session["user_id"] = user_id
 	return {"userId": user_id, "accountId": account_id}
 
 
