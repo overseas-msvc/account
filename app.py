@@ -126,7 +126,7 @@ def login():
 		if user:
 			user = user[0]
 		else:
-			return f"no such user {data["username"]}", 405
+			return f"no such user {data['username']}", 405
 	if base64.b64decode(data["password"]) != base64.b64decode(user.encrypted_password):
 		return jsonify({"message": "wrong password"}), 401
 	session["user_id"] = user.id
