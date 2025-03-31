@@ -65,14 +65,6 @@ def delete_account():
 	return "", 204
 
 
-@app.route("/users", methods=["GET"])
-def get_users():
-	data = request.json
-	db = Database("account")
-	conditions = data["filter"] if "filter" in data else {}
-	objects = db.get_list_of_objects("user", conditions, inJson=True)
-	return json.dumps(objects), 200
-
 @app.route("/user", methods=["GET"])
 def get_user():
 	data = request.json
@@ -111,7 +103,7 @@ def me():
     user_id = session.get("user_id")
     if not user_id:
         return jsonify({"loggedIn": False}), 401
-    return jsonify({"loggedIn": True, "userId": user_id})
+    return jsonify({"loggedIn": True, "userId": user_id, "accountId": session.get("account_id")})
 	
 
 @app.route("/login", methods=["POST"])
@@ -130,7 +122,7 @@ def login():
 	if base64.b64decode(data["password"]) != base64.b64decode(user.encrypted_password):
 		return jsonify({"message": "wrong password"}), 401
 	session["user_id"] = user.id
-
+	session["account_id"] = user.account_id
 	return json.dumps({"userId": user.id, "accountId": user.account_id}), 200
 
 
